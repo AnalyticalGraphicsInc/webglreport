@@ -27,7 +27,7 @@ $(function() {
 
     var canvas = $('<canvas />', { width: '1', height: '1' }).appendTo('body');
     var gl;
-    var possibleNames = (webglVersion === 2) ? ['webgl2', 'experimental-webgl2'] : ['webgl', 'experimental-webgl'];
+    var possibleNames = (webglVersion === 2) ? ['webgl2'] : ['webgl', 'experimental-webgl'];
     var contextName = _.find(possibleNames, function (name) {
         gl = canvas[0].getContext(name, { stencil: true });
         return !!gl;
@@ -465,6 +465,13 @@ $(function() {
             maxElementIndex: showNull(gl.getParameter(gl.MAX_ELEMENT_INDEX)),
             maxServerWaitTimeout: showNull(gl.getParameter(gl.MAX_SERVER_WAIT_TIMEOUT))
         });
+    }
+
+    if (gl.getError()) {
+        // The implementatiion is bad
+        $('#output').addClass('warn');
+        renderReport($('#webglBadImplementation').html());
+        return;
     }
 
     if (window.externalHost) {
